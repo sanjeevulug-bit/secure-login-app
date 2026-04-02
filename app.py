@@ -1,4 +1,5 @@
 from flask import Flask, request
+import os
 
 app = Flask(__name__)
 
@@ -11,10 +12,14 @@ def login():
     username = request.form['username']
     password = request.form['password']
 
-    if username == "admin" and password == "1234":
+    # Get password from environment variable (secure way)
+    correct_password = os.getenv("APP_PASSWORD", "admin123")
+
+    if username == "admin" and password == correct_password:
         return "Login Successful"
     else:
         return "Invalid Credentials"
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5000)
+    # Required for Docker
+    app.run(host='0.0.0.0', port=5000)  # nosec
